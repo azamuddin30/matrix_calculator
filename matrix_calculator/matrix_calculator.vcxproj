@@ -141,6 +141,10 @@
   <ItemGroup>
     <ClCompile Include="matrix_calculator.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PrototypeFn.h" />
+    <ClInclude Include="Struct_userHistory.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

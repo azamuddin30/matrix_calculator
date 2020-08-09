@@ -5,34 +5,13 @@
 #include<iostream>
 #include<iomanip>
 #include<fstream>
+#include<string>
 
 
 using namespace std;
 const int NUMSQ=5;
-//matrix power
-void matCopy(int mat1[NUMSQ][NUMSQ], int mat2[NUMSQ][NUMSQ]);
-void matPower(int ans[NUMSQ][NUMSQ]);
-void createIdenMat(int arr[NUMSQ][NUMSQ], int row, int col);
-//mattrix addition and subtraction
-void matAdd(int a[][NUMSQ], int b[][NUMSQ], int sum[][NUMSQ]);
-void matSubtraction(int a[][NUMSQ], int b[][NUMSQ], int sub[][NUMSQ]);
-
-//matrix transpose
-void transposeMat(int arr[NUMSQ][NUMSQ], int arr2[NUMSQ][NUMSQ]);
-//matrix determinant
-void detDriverFunc(int arr[NUMSQ][NUMSQ]);
-//matrix multiplication
-void multMatrix(int a[NUMSQ][NUMSQ], int b[NUMSQ][NUMSQ], int product[NUMSQ][NUMSQ]);
-void insertData(int [NUMSQ][NUMSQ] ,int,int );
-void initialize(int ans[NUMSQ][NUMSQ], int row, int col);
-void matMultiCore(int a[NUMSQ][NUMSQ], int b[NUMSQ][NUMSQ], int product[NUMSQ][NUMSQ], int row1, int col2, int common);
-//void print2DArr(int [NUMSQ][NUMSQ], int , int );
-//InverseMatrix
-void getCfactor(int M[NUMSQ][NUMSQ], int t[NUMSQ][NUMSQ], int p, int q, int n);
-void ADJ(int M[NUMSQ][NUMSQ], int adj[NUMSQ][NUMSQ], int num);
-bool INV(int M[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], int n);
-int DET(int M[NUMSQ][NUMSQ], int n);
-void invMatDriver(int arr[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ]);
+#include"Struct_userHistory.h"
+#include"PrototypeFn.h"
 template<class T>
 void print(T G[NUMSQ][NUMSQ],int row,int col)
 {
@@ -50,57 +29,162 @@ int main()
 {
     int product[NUMSQ][NUMSQ],arr1[NUMSQ][NUMSQ],arr2[NUMSQ][NUMSQ];
     float inverseMat[NUMSQ][NUMSQ];
-    int userChoice;
+    int userChoice, indexPtr=0, histNum;
+    char ch;
 
-    cout << "List of Matrix Operation :\n"
-        << "1.Matrix Multiplication\n"
-        << "2.Matrix Inverse\n"
-        << "3.Matrix Transpose\n"
-        << "4.Matrix Addition\n"
-        << "5.Matrix Subtraction\n"
-        << "6.Matrix Power\n"
-        << "7.Matrix Determinant\n"
-        <<"Enter your option (1-7) :";
-
-    cin >> userChoice;
-
-    switch (userChoice)
+    cout << "How many History you need? : ";
+    cin >> histNum;
+    if (histNum <= 0)
     {
+        cout << "\nPlease enter 1 or more.Exiting...\n";
+        return 1;
+    }
+    userHistory* ptrH = new userHistory[histNum];
+    cout<<"\n Enter the Matrix Calculator? Y/N : ";
+    cin >> ch;
+
+    while (toupper(ch)=='Y' /*&& indexPtr< histNum*/ )
+    {
+        cout << "List of Matrix Operation :\n"
+            << "1.Matrix Multiplication\n"
+            << "2.Matrix Inverse\n"
+            << "3.Matrix Transpose\n"
+            << "4.Matrix Addition\n"
+            << "5.Matrix Subtraction\n"
+            << "6.Matrix Power\n"
+            << "7.Matrix Determinant\n"
+            << "8.Read User History\n"
+            << "9.History: Reset\n"
+            << "10.History: Print on file\n"
+            << "Enter your option (1-10) :";
+
+        cin >> userChoice;
+
+        switch (userChoice)
+        {
         case 1:
-            multMatrix(arr1, arr2, product);
+            multMatrix(arr1, arr2, product, (ptrH + indexPtr));
+            (ptrH + indexPtr)->position = indexPtr;
+            indexPtr++;
             break;
         case 2:
-            invMatDriver(arr1,inverseMat);
+            invMatDriver(arr1, inverseMat, (ptrH + indexPtr));
+            (ptrH + indexPtr)->position = indexPtr;
+            indexPtr++;
             break;
         case 3:
-            transposeMat(arr1,  arr2);
+            transposeMat(arr1, arr2, (ptrH + indexPtr));
+            (ptrH + indexPtr)->position = indexPtr;
+            indexPtr++;
             break;
         case 4:
-            matAdd(arr1, arr2, product);
+            matAdd(arr1, arr2, product, (ptrH + indexPtr));
+            (ptrH + indexPtr)->position = indexPtr;
+            indexPtr++;
             break;
         case 5:
-            matSubtraction(arr1, arr2, product);
+            matSubtraction(arr1, arr2, product, (ptrH + indexPtr));
+            (ptrH + indexPtr)->position = indexPtr;
+            indexPtr++;
             break;
         case 6:
-            matPower(product);
+            matPower(product, (ptrH+indexPtr) );
+            (ptrH+indexPtr)->position = indexPtr;
+            indexPtr++;
             break;
         case 7:
-            detDriverFunc(arr1);
+            detDriverFunc(arr1, (ptrH + indexPtr));
+            (ptrH + indexPtr)->position = indexPtr;
+            indexPtr++;
+            break;
+        case 8:
+            printStruct(ptrH, indexPtr);
+            break;
+        case 9:
+            resetStruct( ptrH, indexPtr, histNum);
+            break;
+        case 10:
+            printFile(ptrH, indexPtr);
             break;
         default:
             cout << "\nNot a valid option\n";
+
+
+        }
+        
+        if(indexPtr-1 <0)// sometimes when user didnt choose the operation, indexPtr stays at zero. thus indexPtr-1 =-1
+            cout << "\nThe index for history :"<< indexPtr<<endl;
+        else
+            cout << "\nThe index for history :" << indexPtr-1 << endl;
+        
+        if (indexPtr  == histNum )
+        {
+            cout << "\nAll History spaces is filled.Exiting...\n";
+            cout << "\nDo you want to see the history list? Y/N\n";
+            char ch2;
+            cin >> ch2;
+            if(toupper(ch2)=='Y')
+                printStruct(ptrH, indexPtr);
+
+            cout << "\nDo you want to update the history list? Y/N\n";
+            cin >> ch2;
+            int search;
+            if (toupper(ch2) == 'Y')
+            {   
+                while(toupper(ch2) == 'Y')
+                { 
+                    cout << "\nEnter the Position You wish to change: ";
+                    cin >> search;
+                    updateStruct(ptrH, indexPtr, search);
             
+                    cout << "\nDo you want to update the history list? Y/N\n";
+                    cin >> ch2;
             
+                }
+                 cout << "\nDo you want to see the history list? Y/N\n";
+                 char ch3;
+                 cin >> ch3;
+                 if (toupper(ch3) == 'Y')
+                 {
+                     printStruct(ptrH, indexPtr);
+                     
+
+                 }
+                 
+
+            }
+
+            cout << "\nDo you want to reset the history list? Y/N\n";
+            char ch4;
+            cin >> ch4;
+            if (toupper(ch4) == 'Y')
+                resetStruct(ptrH, indexPtr, histNum);
+            else
+                break;
+                
+            
+        }
+        else
+        {
+            cout << "\n Enter the Matrix again ? Y/N :";
+            cin >> ch;
+        }
+
+        
+
     }
 
     
-   
+    
+    delete[] ptrH;
+    ptrH = NULL;
     return 0;
 }
 // multiplication functions driver
-void multMatrix(int a[NUMSQ][NUMSQ],int b[NUMSQ][NUMSQ],int product[NUMSQ][NUMSQ])
+void multMatrix(int a[NUMSQ][NUMSQ],int b[NUMSQ][NUMSQ],int product[NUMSQ][NUMSQ], userHistory* ptr)
 {   
     int i, j, k,row1,row2,col1,col2;
+    string id = "Multiplication";
     
 
     cout << "Enter the row and column for matrix 1: ";
@@ -145,8 +229,11 @@ void multMatrix(int a[NUMSQ][NUMSQ],int b[NUMSQ][NUMSQ],int product[NUMSQ][NUMSQ
        
     }
 
+    float ans2[NUMSQ][NUMSQ];
+    convertToFloatArray(product, ans2);
+    fillStruct(a, b, ans2, id, ptr,row1,col2);
     
-
+    ptr = NULL;
     return;
 }
 
@@ -154,7 +241,7 @@ void insertData(int arr[NUMSQ][NUMSQ],int row, int col)
 {   
 
    
-    cout << "The elements of ["<<row <<"] ["<<col<<"] matrix :" << endl;
+    cout << "The elements of ["<<row <<"] X ["<<col<<"] matrix :" << endl;
    
     for (int i = 0; i < row; i++) 
     {
@@ -173,7 +260,7 @@ void insertData(int arr[NUMSQ][NUMSQ],int row, int col)
 
 void initialize(int ans[NUMSQ][NUMSQ], int row, int col)
 {
-    cout << "Initialize the matrix " << endl;
+   // cout << "Initialize the matrix " << endl;
 
     for (int i = 0; i < row; i++)
         for (int j = 0; j < col; j++)
@@ -200,8 +287,9 @@ void matMultiCore(int a[NUMSQ][NUMSQ], int b[NUMSQ][NUMSQ], int product[NUMSQ][N
 
 
 // Inverse Matrix Function driver
-void invMatDriver(int arr[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ])
-{
+void invMatDriver(int arr[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], userHistory* ptr)
+{   
+    string id = "Inverse_matrix";
     int row, col;
     cout << "Enter the number of row and column: ";
     cin >> row >> col;
@@ -231,14 +319,19 @@ void invMatDriver(int arr[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ])
     cout << "Input matrix is :\n";
     print(arr, row, row);
     cout << "\nThe Inverse is :\n";
-    if (INV(arr, inv, row))
+    if (InvFunc(arr, inv, row))
         print(inv, row, row);
 
 
+    int dummyArray[NUMSQ][NUMSQ];
+    initialize(dummyArray, NUMSQ, NUMSQ);
+
+    fillStruct(arr, dummyArray, inv, id, ptr,row,col);
+    ptr = NULL;
     return;
 }
 
-void getCfactor(int M[NUMSQ][NUMSQ], int t[NUMSQ][NUMSQ], int lockedRow, int lockedCol, int sqSide)
+void getSubMat(int M[NUMSQ][NUMSQ], int t[NUMSQ][NUMSQ], int lockedRow, int lockedCol, int sqSide)
 {
     int i = 0, j = 0;
     for (int r = 0; r < sqSide; r++)
@@ -260,7 +353,7 @@ void getCfactor(int M[NUMSQ][NUMSQ], int t[NUMSQ][NUMSQ], int lockedRow, int loc
     }
 }
 
-int DET(int M[NUMSQ][NUMSQ], int n) //to find determinant 
+int findDet(int M[NUMSQ][NUMSQ], int n) //to find determinant 
 {
     int D = 0;
     if (n == 1)
@@ -272,15 +365,15 @@ int DET(int M[NUMSQ][NUMSQ], int n) //to find determinant
     for (int f = 0; f < n; f++)
     {
         //For Getting submatrix of M[0][f]
-        getCfactor(M, t, 0, f, n);
-        D += s * M[0][f] * DET(t, n - 1);
+        getSubMat(M, t, 0, f, n);
+        D += s * M[0][f] * findDet(t, n - 1);
         s = -s;
 
     }
     return D;
 }
 
-void ADJ(int M[NUMSQ][NUMSQ], int adj[NUMSQ][NUMSQ],int num)
+void MatAdj(int M[NUMSQ][NUMSQ], int adj[NUMSQ][NUMSQ],int num)
 {
     if (num == 1)
     {
@@ -295,16 +388,16 @@ void ADJ(int M[NUMSQ][NUMSQ], int adj[NUMSQ][NUMSQ],int num)
         for (int j = 0; j < num; j++)
         {
             //To get cofactor of M[i][j]
-            getCfactor(M, t, i, j, num);
+            getSubMat(M, t, i, j, num);
             s = ((i + j) % 2 == 0) ? 1 : -1; //sign of adj[j][i] positive if sum of row and column indexes is even.
-            adj[j][i] = (s) * (DET(t, num - 1)); //Interchange rows and columns to get the transpose of the cofactor matrix
+            adj[j][i] = (s) * (findDet(t, num - 1)); //Interchange rows and columns to get the transpose of the cofactor matrix
         }
     }
 }
 
-bool INV(int M[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], int n) 
+bool InvFunc(int M[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], int n) 
 {
-    int det = DET(M, n);
+    int det = findDet(M, n);
     if (det == 0)
     {
         cout << "\nDeterminant is Zero,Hence not inversible\n";
@@ -312,20 +405,21 @@ bool INV(int M[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], int n)
     }
     int adj[NUMSQ][NUMSQ]; 
 
-    ADJ(M, adj,n);// need to adjust this function or just paste it here, col and row problem at declaration
+    MatAdj(M, adj,n);// need to adjust this function or just paste it here, col and row problem at declaration
 
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
-            inv[i][j] = adj[i][j] / float(det);
+            inv[i][j] = adj[i][j] / static_cast<float>(det);
     return true;
 }
 
 
 //Matrix determinant driver
 
-void detDriverFunc(int arr[NUMSQ][NUMSQ])
+void detDriverFunc(int arr[NUMSQ][NUMSQ], userHistory* ptr)
 {
     int row, col;
+    string id = "Determinant";
     cout << "Enter the number of row and column: ";
     cin >> row >> col;
     
@@ -352,19 +446,27 @@ void detDriverFunc(int arr[NUMSQ][NUMSQ])
     insertData(arr, row, row);
     cout << "Input matrix is :\n";
     print(arr, row, row);
-    
+    int Answer = findDet(arr, row);
     // only square matrix , so row=col
-    cout<<"The Determinant of ["<<row<<"]["<<col<<"] matrix is "<< DET(arr, row)<<"\n";
-    
+    cout<<"The Determinant of ["<<row<<"]["<<col<<"] matrix is "<< Answer<<"\n";
 
+    int dummyArray[NUMSQ][NUMSQ];
+    initialize(dummyArray, NUMSQ, NUMSQ);
+    float ans2[NUMSQ][NUMSQ];
+    initialize(ans2, NUMSQ, NUMSQ);
+    ans2[0][0] = Answer;
+    
+    fillStruct(arr, dummyArray, ans2, id, ptr,row,col);
+    
+    ptr = NULL;
 
     return;
 }
 
 //Matrix transpose driver
-void transposeMat(int arr[NUMSQ][NUMSQ], int arr2[NUMSQ][NUMSQ])
+void transposeMat(int arr[NUMSQ][NUMSQ], int arr2[NUMSQ][NUMSQ], userHistory* ptr)
 {   
-
+    string id = "Transpose";
     initialize(arr, NUMSQ, NUMSQ);
     initialize(arr2, NUMSQ, NUMSQ);
 
@@ -382,9 +484,6 @@ void transposeMat(int arr[NUMSQ][NUMSQ], int arr2[NUMSQ][NUMSQ])
             << "Row and Column exceed the allocated size or equal 0 and less\n";
         return;
     }
-
-    
-
 
     insertData(arr, row, col);
    
@@ -406,22 +505,25 @@ void transposeMat(int arr[NUMSQ][NUMSQ], int arr2[NUMSQ][NUMSQ])
             cout << arr2[i][j] << " ";
         cout << endl;
     }
-        
+    int dummyArray[NUMSQ][NUMSQ];
     
-
-
+    initialize(dummyArray, NUMSQ, NUMSQ);
+    float ans2[NUMSQ][NUMSQ];
+    convertToFloatArray(arr2, ans2);
+    fillStruct(arr, dummyArray, ans2, id, ptr,row,col);
+    ptr = NULL;
     return;
 }
 
 //Matrix Addition & subtraction
-void matAdd(int a[][NUMSQ], int b[][NUMSQ], int sum[][NUMSQ]) 
+void matAdd(int a[][NUMSQ], int b[][NUMSQ], int sum[][NUMSQ], userHistory* ptr)
 {   
     initialize(a, NUMSQ, NUMSQ);
     initialize(b, NUMSQ, NUMSQ);
     initialize(sum, NUMSQ, NUMSQ);
 
     int i, j, row1, row2, col1, col2;
-
+    string id = "Matrix_Addition";
 
     cout << "Enter the row and column for matrix 1: ";
     cin >> row1 >> col1;
@@ -464,12 +566,16 @@ void matAdd(int a[][NUMSQ], int b[][NUMSQ], int sum[][NUMSQ])
             cout << endl;
         }
     }
-
-   
+    
+    float ans2[NUMSQ][NUMSQ];
+    convertToFloatArray(sum, ans2);
+    
+    fillStruct(a, b, ans2, id, ptr,row1,col1);
+    ptr = NULL;
     return;
 }
 
-void matSubtraction(int a[][NUMSQ], int b[][NUMSQ], int sub[][NUMSQ]) 
+void matSubtraction(int a[][NUMSQ], int b[][NUMSQ], int sub[][NUMSQ], userHistory* ptr)
 {
 
     initialize(a, NUMSQ, NUMSQ);
@@ -477,7 +583,7 @@ void matSubtraction(int a[][NUMSQ], int b[][NUMSQ], int sub[][NUMSQ])
     initialize(sub, NUMSQ, NUMSQ);
 
     int i, j, row1, row2, col1, col2;
-
+    string id = "Matrix_Subtraction";
 
     cout << "Enter the row and column for matrix 1: ";
     cin >> row1 >> col1;
@@ -520,13 +626,17 @@ void matSubtraction(int a[][NUMSQ], int b[][NUMSQ], int sub[][NUMSQ])
             cout << endl;
         }
     }
-
-
+    
+    float ans2[NUMSQ][NUMSQ];
+    convertToFloatArray(sub, ans2);
+   
+    fillStruct(a, b, ans2, id, ptr,row1,col1);
+    ptr = NULL;
     return;
 }
 
 //Matrix Power
-void matPower(int ans[NUMSQ][NUMSQ])
+void matPower(int ans[NUMSQ][NUMSQ], userHistory* ptr)
 {   
     int original[NUMSQ][NUMSQ];
     int container[NUMSQ][NUMSQ];
@@ -535,7 +645,7 @@ void matPower(int ans[NUMSQ][NUMSQ])
     initialize(original, NUMSQ, NUMSQ);
     initialize(container, NUMSQ, NUMSQ);
 
-
+    string id = "Matrix_Power";
     int row, col;
     cout << "Enter the number of row and column: ";
     cin >> row >> col;
@@ -564,13 +674,15 @@ void matPower(int ans[NUMSQ][NUMSQ])
     if (userInput==0)
     {
         cout << "The Answer is identity Matrix\n";
-        createIdenMat(container,row,col);
-        print(container, row, col);
+        createIdenMat(ans,row,col);
+        print(ans, row, col);
+       
     }
     else if (userInput==1)
     {
         cout << "The answer is: \n";
         print(original, row, col);
+        matCopy(ans, original);
     }
     else
     {
@@ -596,10 +708,12 @@ void matPower(int ans[NUMSQ][NUMSQ])
 
 
     }
+    initialize(container,NUMSQ,NUMSQ);
+    float ans2[NUMSQ][NUMSQ];
+    convertToFloatArray(ans, ans2);
+    fillStruct(original, container, ans2, id, ptr,row,col);
 
-   
-
-
+    ptr = NULL;
     return;
 }
 
@@ -646,6 +760,305 @@ void createIdenMat(int arr[NUMSQ][NUMSQ], int row, int col)
         
     
 
+
+    return;
+}
+// fill the struct function 
+// Reside in each Driver Fn
+void fillStruct(int arr[NUMSQ][NUMSQ], int arr2[NUMSQ][NUMSQ], float arrO[NUMSQ][NUMSQ],string id, userHistory* ptr,int row,int col)
+{   
+    //input operation id
+    ptr->operationID = id;
+    // input array 1
+    initialiseStructArr( ptr);// initialise all array;
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            ptr->inArray[i][j] = arr[i][j];
+        }
+            
+    }
+    //input array 2
+   
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            ptr->inArray2[i][j] = arr2[i][j];
+        }
+            
+    }
+    //output array
+    
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            ptr->OutArray[i][j] = arrO[i][j];
+        }
+            
+    }
+
+    ptr = NULL;
+    return;
+}
+
+void initialiseStructArr(userHistory* ptr)
+{   
+    for (int i = 0; i < NUMSQ; i++)
+    {
+        for (int j = 0; j < NUMSQ; j++)
+        {
+            ptr->inArray[i][j] = 0;
+            ptr->inArray2[i][j] = 0;
+            ptr->OutArray[i][j] = 0;
+
+
+        }
+            
+    }
+
+    ptr = NULL;
+    return;
+}
+
+void convertToFloatArray(int arr[NUMSQ][NUMSQ],float arrF[NUMSQ][NUMSQ])
+{
+    for (int i = 0; i < NUMSQ; i++)
+    {
+        for (int j = 0; j < NUMSQ; j++)
+            arrF[i][j] = static_cast<float>(arr[i][j]);
+    }
+
+
+    return;
+}
+
+void printStruct( userHistory* ptr,int index)
+{   
+    //print 
+    for (int i = 0; i < index; i++)
+    {
+        cout << "Index Position :"<<(ptr + i)->position << "\tOperation: "
+            << (ptr + i)->operationID << endl;
+        cout << "\n-----------------------------------------------------\n";
+        cout << "First Input Array :\n";
+        for (int j = 0; j < NUMSQ; ++j)
+        {
+            for (int k = 0; k < NUMSQ; ++k)
+            {
+                cout << (ptr + i)->inArray[j][k] << " ";
+
+            }
+            cout << endl;
+        }
+        cout << "\n-----------------------------------------------------\n";
+        cout <<"Second Input Array :\n"  ;
+        for (int j = 0; j < NUMSQ; ++j)
+        {
+            for (int k = 0; k < NUMSQ; ++k)
+            {
+                cout << (ptr + i)->inArray2[j][k] << " ";
+
+            }
+            cout << endl;
+        }
+        cout << "\n-----------------------------------------------------\n";
+        cout << "Output Array(for determinant the element at array[0][0] is the answer)\n";
+        for (int j = 0; j < NUMSQ; ++j)
+        {
+            for (int k = 0; k < NUMSQ; ++k)
+            {
+                cout << (ptr + i)->OutArray[j][k] << " ";
+
+            }
+            cout << endl;
+        }
+        cout << "\n-----------------------------------------------------\n";
+    }
+    cout << "\nDo you want to print the history list? Y/N\n";
+    char ch3;
+    cin >> ch3;
+    if (toupper(ch3) == 'Y')
+    {
+
+        printFile(ptr, index);
+
+    }
+    ptr = NULL;
+    return;
+}
+
+void initialize(float ans[NUMSQ][NUMSQ], int row, int col)
+{
+    //cout << "Initialize the matrix " << endl;
+
+    for (int i = 0; i < row; i++)
+        for (int j = 0; j < col; j++)
+        {
+            ans[i][j] = 0;
+        }
+
+
+    return;
+}
+void updateStruct(userHistory* ptr, int current, int search)//current is already +1 than the last position
+{   
+    int product[NUMSQ][NUMSQ], arr1[NUMSQ][NUMSQ], arr2[NUMSQ][NUMSQ];
+    float inverseMat[NUMSQ][NUMSQ];
+    int userChoice;
+
+    if (search >= current)
+    {
+        cout << "\nThe Position is out of the range.Exiting..\n";
+        return;
+    }
+    else
+    {
+        for (int i = 0; i < current; i++)
+        {
+            if ((ptr + i)->position == search)
+            {
+                cout << "List of Matrix Operation :\n"
+                    << "1.Matrix Multiplication\n"
+                    << "2.Matrix Inverse\n"
+                    << "3.Matrix Transpose\n"
+                    << "4.Matrix Addition\n"
+                    << "5.Matrix Subtraction\n"
+                    << "6.Matrix Power\n"
+                    << "7.Matrix Determinant\n"
+                    << "Enter your option (1-7) :";
+
+                cin >> userChoice;
+
+                switch (userChoice)
+                {
+                case 1:
+                    multMatrix(arr1, arr2, product, (ptr + search));
+                    (ptr + search)->position = search;
+                   
+                    break;
+                case 2:
+                    invMatDriver(arr1, inverseMat, (ptr + search));
+                    (ptr + search)->position = search;
+                    break;
+                case 3:
+                    transposeMat(arr1, arr2, (ptr + search));
+                    (ptr + search)->position = search;
+                    break;
+                case 4:
+                    matAdd(arr1, arr2, product, (ptr + search));
+                    (ptr + search)->position = search;
+                    break;
+                case 5:
+                    matSubtraction(arr1, arr2, product, (ptr + search));
+                    (ptr + search)->position = search;
+                    break;
+                case 6:
+                    matPower(product, (ptr + search));
+                    (ptr + search)->position = search;
+                    break;
+                case 7:
+                    detDriverFunc(arr1, (ptr + search));
+                    (ptr + search)->position = search;
+                    break;
+               
+                default:
+                    cout << "\nNot a valid option\n";
+
+
+                }
+            }
+
+        }
+
+    }
+
+    return;
+}
+
+void resetStruct(userHistory*& ptrK, int& index, int histNum2 )
+{
+    delete[] ptrK;
+    ptrK = NULL;
+    index = 0;
+    ptrK = new userHistory[histNum2];
+
+    return;
+}
+
+void printFile( userHistory* ptrK,  int index)
+{
+    ifstream openF;
+    ofstream writeF;
+
+    cout << "Name Your file: ";
+    string fileName;
+    cin >> fileName;
+    openF.open(fileName.c_str());
+
+    if (!openF.fail())
+    {
+        cout << "\nFile is already existed \n"
+        << "Do you want to overwrite Y/N :";
+        char ch;
+        cin >> ch;
+        
+        if (toupper(ch) == 'N')
+            return;
+    }
+    openF.close();
+    writeF.open(fileName.c_str());
+
+    if (writeF.fail())
+    {
+        cout << "Opening failed.Exiting..\n";
+        return;
+
+    }
+    for (int i = 0; i < index; i++)
+    {
+        writeF << "Index Position :" << (ptrK + i)->position << "\tOperation: "
+            << (ptrK + i)->operationID << endl;
+        writeF << "\n-----------------------------------------------------\n";
+        writeF << "First Input Array :\n";
+        for (int j = 0; j < NUMSQ; ++j)
+        {
+            for (int k = 0; k < NUMSQ; ++k)
+            {
+                writeF << (ptrK + i)->inArray[j][k] << " ";
+
+            }
+            writeF << endl;
+        }
+        writeF << "\n-----------------------------------------------------\n";
+        writeF << "Second Input Array :\n";
+        for (int j = 0; j < NUMSQ; ++j)
+        {
+            for (int k = 0; k < NUMSQ; ++k)
+            {
+                writeF << (ptrK + i)->inArray2[j][k] << " ";
+
+            }
+            writeF << endl;
+        }
+        writeF << "\n-----------------------------------------------------\n";
+        writeF << "Output Array(for determinant the element at array[0][0] is the answer)\n";
+        for (int j = 0; j < NUMSQ; ++j)
+        {
+            for (int k = 0; k < NUMSQ; ++k)
+            {
+                writeF << (ptrK + i)->OutArray[j][k] << " ";
+
+            }
+            writeF << endl;
+        }
+        writeF << "\n-----------------------------------------------------\n";
+    }
+    ptrK = NULL;
+
+    writeF.close();
 
     return;
 }
