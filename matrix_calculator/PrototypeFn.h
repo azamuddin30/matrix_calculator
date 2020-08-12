@@ -32,6 +32,6 @@ void matMultiCore(int a[NUMSQ][NUMSQ], int b[NUMSQ][NUMSQ], int product[NUMSQ][N
 //InverseMatrix
 void getSubMat(int M[NUMSQ][NUMSQ], int t[NUMSQ][NUMSQ], int p, int q, int n);
 void MatAdj(int M[NUMSQ][NUMSQ], int adj[NUMSQ][NUMSQ], int num);
-bool InvFunc(int M[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], int n);
+void InvFunc(int M[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], int n, bool& check);
 int findDet(int M[NUMSQ][NUMSQ], int n);
 void invMatDriver(int arr[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], userHistory* ptr);

@@ -45,18 +45,18 @@ int main()
 
     while (toupper(ch)=='Y' /*&& indexPtr< histNum*/ )
     {
-        cout << "\n\nList of Matrix Operation :\n"
-            << "1.Matrix Multiplication\n"
-            << "2.Matrix Inverse\n"
-            << "3.Matrix Transpose\n"
-            << "4.Matrix Addition\n"
-            << "5.Matrix Subtraction\n"
-            << "6.Matrix Power\n"
-            << "7.Matrix Determinant\n"
-            << "8.Read User History\n"
-            << "9.History: Reset\n"
-            << "10.History: Print on file\n"
-            << "11.Exit\n"
+        cout << "\n\nList of Matrix Operation :\n\n"
+            << "1.Matrix Multiplication\n\n"
+            << "2.Matrix Inverse\n\n"
+            << "3.Matrix Transpose\n\n"
+            << "4.Matrix Addition\n\n"
+            << "5.Matrix Subtraction\n\n"
+            << "6.Matrix Power\n\n"
+            << "7.Matrix Determinant\n\n"
+            << "8.Read User History\n\n"
+            << "9.History: Reset\n\n"
+            << "10.History: Print on file\n\n"
+            << "11.Exit\n\n"
             << "Enter your option (1-10) :";
 
         cin >> userChoice;
@@ -115,47 +115,52 @@ int main()
 
         }
         
-        if(indexPtr-1 <0)// sometimes when user didnt choose the operation, indexPtr stays at zero. thus indexPtr-1 =-1
-            cout << "\nThe index for history :"<< indexPtr<<endl;
-        else
-            cout << "\nThe index for history :" << indexPtr-1 << endl;
+        if (indexPtr != histNum)
+        {
+            cout << "\nThe next index for history :" << indexPtr << endl;
+        }
+       
+        
         
         if (indexPtr  == histNum )
         {
             cout << "\nAll History spaces is filled.Exiting...\n";
-            cout << "\nDo you want to see the history list? Y/N\n";
+            cout << "\nDo you want to see and print the history list? Y/N\n";
             char ch2;
             cin >> ch2;
-            if(toupper(ch2)=='Y')
+            if (toupper(ch2) == 'Y')
+            {
                 printStruct(ptrH, indexPtr);
 
-            cout << "\nDo you want to update the history list? Y/N\n";
-            cin >> ch2;
-            int search;
-            if (toupper(ch2) == 'Y')
-            {   
-                while(toupper(ch2) == 'Y')
-                { 
+                cout << "\nDo you want to update the history list? Y/N\n";
+                cin >> ch2;
+                int search;
+               
+                while (toupper(ch2) == 'Y')
+                {
                     cout << "\nEnter the Position You wish to change: ";
                     cin >> search;
                     updateStruct(ptrH, indexPtr, search);
-            
+
                     cout << "\nDo you want to update the history list? Y/N\n";
                     cin >> ch2;
-            
-                }
-                 cout << "\nDo you want to see the history list? Y/N\n";
-                 char ch3;
-                 cin >> ch3;
-                 if (toupper(ch3) == 'Y')
-                 {
-                     printStruct(ptrH, indexPtr);
-                     
 
-                 }
-                 
+                }
+                cout << "\nDo you want to see the history list? Y/N\n";
+                char ch3;
+                cin >> ch3;
+                if (toupper(ch3) == 'Y')
+                {
+                    printStruct(ptrH, indexPtr);
+
+
+                }
+
+
+                
 
             }
+                
 
             cout << "\nDo you want to reset the history list? Y/N\n";
             char ch4;
@@ -293,6 +298,7 @@ void matMultiCore(int a[NUMSQ][NUMSQ], int b[NUMSQ][NUMSQ], int product[NUMSQ][N
 void invMatDriver(int arr[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], userHistory* ptr)
 {   
     string id = "Inverse_matrix";
+    bool check = false;// check if the determinant >0 , then true and vice versa
     int row, col;
     cout << "Enter the number of row and column: ";
     cin >> row >> col;
@@ -322,14 +328,16 @@ void invMatDriver(int arr[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], userHistory* p
     cout << "Input matrix is :\n";
     print(arr, row, row);
     cout << "\nThe Inverse is :\n";
-    if (InvFunc(arr, inv, row))
+    InvFunc(arr, inv, row, check);
+    if (check)
+    {
         print(inv, row, row);
+        int dummyArray[NUMSQ][NUMSQ];
+        initialize(dummyArray, NUMSQ, NUMSQ);
+        fillStruct(arr, dummyArray, inv, id, ptr, row, col);
 
 
-    int dummyArray[NUMSQ][NUMSQ];
-    initialize(dummyArray, NUMSQ, NUMSQ);
-
-    fillStruct(arr, dummyArray, inv, id, ptr,row,col);
+    }
     ptr = NULL;
     return;
 }
@@ -398,13 +406,14 @@ void MatAdj(int M[NUMSQ][NUMSQ], int adj[NUMSQ][NUMSQ],int num)
     }
 }
 
-bool InvFunc(int M[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], int n) 
+void InvFunc(int M[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], int n,bool &check) 
 {
     int det = findDet(M, n);
     if (det == 0)
     {
         cout << "\nDeterminant is Zero,Hence not inversible\n";
-        return false;
+        check = false;
+        return ;
     }
     int adj[NUMSQ][NUMSQ]; 
 
@@ -413,7 +422,8 @@ bool InvFunc(int M[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], int n)
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             inv[i][j] = adj[i][j] / static_cast<float>(det);
-    return true;
+    check = true;
+    return ;
 }
 
 
@@ -453,6 +463,7 @@ void detDriverFunc(int arr[NUMSQ][NUMSQ], userHistory* ptr)
     // only square matrix , so row=col
     cout<<"The Determinant of ["<<row<<"]["<<col<<"] matrix is "<< Answer<<"\n";
 
+    //dummy array is just a place holder since function fillStruct required 2 int input array
     int dummyArray[NUMSQ][NUMSQ];
     initialize(dummyArray, NUMSQ, NUMSQ);
     float ans2[NUMSQ][NUMSQ];
@@ -505,7 +516,7 @@ void transposeMat(int arr[NUMSQ][NUMSQ], int arr2[NUMSQ][NUMSQ], userHistory* pt
     cout << "The transpose matrix is:" << endl;
     for (int i = 0; i < col; ++i) {
         for (int j = 0; j < row; ++j)
-            cout << arr2[i][j] << " ";
+            cout << arr2[i][j] << " | ";
         cout << endl;
     }
     int dummyArray[NUMSQ][NUMSQ];
@@ -912,7 +923,7 @@ void updateStruct(userHistory* ptr, int current, int search)//current is already
     float inverseMat[NUMSQ][NUMSQ];
     int userChoice;
 
-    if (search >= current)
+    if (search >= current && search < 0)
     {
         cout << "\nThe Position is out of the range.Exiting..\n";
         return;
