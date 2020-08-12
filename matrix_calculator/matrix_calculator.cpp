@@ -36,16 +36,16 @@ int main()
     cin >> histNum;
     if (histNum <= 0)
     {
-        cout << "\nPlease enter 1 or more.Exiting...\n";
-        return 1;
+        cout << "\nThe number of history cannot be 0 or less, Default value of 5 is used..\n";
+        histNum = 5;
     }
     userHistory* ptrH = new userHistory[histNum];
-    cout<<"\n Enter the Matrix Calculator? Y/N : ";
+    cout<<"\nEnter the Matrix Calculator? Y/N : ";
     cin >> ch;
 
     while (toupper(ch)=='Y' /*&& indexPtr< histNum*/ )
     {
-        cout << "List of Matrix Operation :\n"
+        cout << "\n\nList of Matrix Operation :\n"
             << "1.Matrix Multiplication\n"
             << "2.Matrix Inverse\n"
             << "3.Matrix Transpose\n"
@@ -56,6 +56,7 @@ int main()
             << "8.Read User History\n"
             << "9.History: Reset\n"
             << "10.History: Print on file\n"
+            << "11.Exit\n"
             << "Enter your option (1-10) :";
 
         cin >> userChoice;
@@ -106,6 +107,8 @@ int main()
         case 10:
             printFile(ptrH, indexPtr);
             break;
+        case 11:
+            return 1;
         default:
             cout << "\nNot a valid option\n";
 
