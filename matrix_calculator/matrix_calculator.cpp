@@ -32,7 +32,7 @@ int main()
     int userChoice, indexPtr=0, histNum;
     char ch;
 
-    cout << "How many History you need? : ";
+    cout << "How many History you need?(multiplication, inverse, transpose, add, minus,power,determinant) : ";
     cin >> histNum;
     if (histNum <= 0)
     {
@@ -195,11 +195,11 @@ void multMatrix(int a[NUMSQ][NUMSQ],int b[NUMSQ][NUMSQ],int product[NUMSQ][NUMSQ
     string id = "Multiplication";
     
 
-    cout << "Enter the row and column for matrix 1: ";
+    cout << "Enter the row and column for matrix 1 (only m x n multiply by n x m): ";
     cin >> row1 >> col1;
 
 
-    cout << "Enter the row and column for matrix 2: ";
+    cout << "Enter the row and column for matrix 2 (only m x n multiply by n x m): ";
     cin >> row2 >> col2;
 
     if (row1 > NUMSQ || col1 > NUMSQ || row2 > NUMSQ || col2 > NUMSQ)
@@ -214,6 +214,7 @@ void multMatrix(int a[NUMSQ][NUMSQ],int b[NUMSQ][NUMSQ],int product[NUMSQ][NUMSQ
     else if (col1 != row2)
     {
         cout << "Column of first matrix should be equal to row of second matrix\n";
+        return;
     }
     else
     {
@@ -226,12 +227,7 @@ void multMatrix(int a[NUMSQ][NUMSQ],int b[NUMSQ][NUMSQ],int product[NUMSQ][NUMSQ
        
         initialize(product, NUMSQ, NUMSQ);
         matMultiCore(a, b, product, row1, col2, col1);
-        //for (i = 0; i < row1; ++i)
-            //for (j = 0; j < col2; ++j)
-              //  for (k = 0; k < col1; ++k)
-               // {
-               //     product[i][j] += a[i][k] * b[k][j];
-               // }
+        
         cout << "The Product of multiplication is: \n";
         print( product,  row1,  col2);
        
@@ -239,7 +235,7 @@ void multMatrix(int a[NUMSQ][NUMSQ],int b[NUMSQ][NUMSQ],int product[NUMSQ][NUMSQ
 
     float ans2[NUMSQ][NUMSQ];
     convertToFloatArray(product, ans2);
-    fillStruct(a, b, ans2, id, ptr,row1,col2);
+    fillStruct(a, b, ans2, id, ptr,NUMSQ,NUMSQ);
     
     ptr = NULL;
     return;
@@ -268,7 +264,7 @@ void insertData(int arr[NUMSQ][NUMSQ],int row, int col)
 
 void initialize(int ans[NUMSQ][NUMSQ], int row, int col)
 {
-   // cout << "Initialize the matrix " << endl;
+   
 
     for (int i = 0; i < row; i++)
         for (int j = 0; j < col; j++)
@@ -300,7 +296,7 @@ void invMatDriver(int arr[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], userHistory* p
     string id = "Inverse_matrix";
     bool check = false;// check if the determinant >0 , then true and vice versa
     int row, col;
-    cout << "Enter the number of row and column: ";
+    cout << "Enter the number of row and column (must be square matrix m x m): ";
     cin >> row >> col;
 
     while (row != col)
@@ -352,7 +348,7 @@ void getSubMat(int M[NUMSQ][NUMSQ], int t[NUMSQ][NUMSQ], int lockedRow, int lock
             if (r != lockedRow && c != lockedCol)
             {
                 t[i][j++] = M[r][c]; 
-                if (j == sqSide - 1)//If row is filled  
+                if (j == sqSide - 1)//If row is filled , the row of submatrix always -1 than main matrix
                 {
                     j = 0; //and reset column index
                     i++;//increase r index
@@ -433,7 +429,7 @@ void detDriverFunc(int arr[NUMSQ][NUMSQ], userHistory* ptr)
 {
     int row, col;
     string id = "Determinant";
-    cout << "Enter the number of row and column: ";
+    cout << "Enter the number of row and column (only square matrix m x m): ";
     cin >> row >> col;
     
 
@@ -470,7 +466,7 @@ void detDriverFunc(int arr[NUMSQ][NUMSQ], userHistory* ptr)
     initialize(ans2, NUMSQ, NUMSQ);
     ans2[0][0] = Answer;
     
-    fillStruct(arr, dummyArray, ans2, id, ptr,row,col);
+    fillStruct(arr, dummyArray, ans2, id, ptr,NUMSQ,NUMSQ);
     
     ptr = NULL;
 
@@ -485,7 +481,7 @@ void transposeMat(int arr[NUMSQ][NUMSQ], int arr2[NUMSQ][NUMSQ], userHistory* pt
     initialize(arr2, NUMSQ, NUMSQ);
 
     int row, col;
-    cout << "Enter the number of row and column: ";
+    cout << "Enter the number of row and column (m x n --> n x m): ";
     cin >> row >> col;
 
     if (row > NUMSQ || col > NUMSQ)
@@ -524,7 +520,7 @@ void transposeMat(int arr[NUMSQ][NUMSQ], int arr2[NUMSQ][NUMSQ], userHistory* pt
     initialize(dummyArray, NUMSQ, NUMSQ);
     float ans2[NUMSQ][NUMSQ];
     convertToFloatArray(arr2, ans2);
-    fillStruct(arr, dummyArray, ans2, id, ptr,row,col);
+    fillStruct(arr, dummyArray, ans2, id, ptr,NUMSQ,NUMSQ);
     ptr = NULL;
     return;
 }
@@ -539,11 +535,11 @@ void matAdd(int a[][NUMSQ], int b[][NUMSQ], int sum[][NUMSQ], userHistory* ptr)
     int i, j, row1, row2, col1, col2;
     string id = "Matrix_Addition";
 
-    cout << "Enter the row and column for matrix 1: ";
+    cout << "Enter the row and column for matrix 1 (row1 == row2, col1 ==col2): ";
     cin >> row1 >> col1;
 
 
-    cout << "Enter the row and column for matrix 2: ";
+    cout << "Enter the row and column for matrix 2 (row1 == row2, col1 ==col2): ";
     cin >> row2 >> col2;
 
 
@@ -584,7 +580,7 @@ void matAdd(int a[][NUMSQ], int b[][NUMSQ], int sum[][NUMSQ], userHistory* ptr)
     float ans2[NUMSQ][NUMSQ];
     convertToFloatArray(sum, ans2);
     
-    fillStruct(a, b, ans2, id, ptr,row1,col1);
+    fillStruct(a, b, ans2, id, ptr,NUMSQ,NUMSQ);
     ptr = NULL;
     return;
 }
@@ -599,11 +595,11 @@ void matSubtraction(int a[][NUMSQ], int b[][NUMSQ], int sub[][NUMSQ], userHistor
     int i, j, row1, row2, col1, col2;
     string id = "Matrix_Subtraction";
 
-    cout << "Enter the row and column for matrix 1: ";
+    cout << "Enter the row and column for matrix 1 (row1 == row2, col1 ==col2): ";
     cin >> row1 >> col1;
 
 
-    cout << "Enter the row and column for matrix 2: ";
+    cout << "Enter the row and column for matrix 2 (row1 == row2, col1 ==col2): ";
     cin >> row2 >> col2;
 
 
@@ -644,7 +640,7 @@ void matSubtraction(int a[][NUMSQ], int b[][NUMSQ], int sub[][NUMSQ], userHistor
     float ans2[NUMSQ][NUMSQ];
     convertToFloatArray(sub, ans2);
    
-    fillStruct(a, b, ans2, id, ptr,row1,col1);
+    fillStruct(a, b, ans2, id, ptr,NUMSQ,NUMSQ);
     ptr = NULL;
     return;
 }
@@ -661,7 +657,7 @@ void matPower(int ans[NUMSQ][NUMSQ], userHistory* ptr)
 
     string id = "Matrix_Power";
     int row, col;
-    cout << "Enter the number of row and column: ";
+    cout << "Enter the number of row and column (m x m only): ";
     cin >> row >> col;
     while (row != col)
     {
@@ -725,7 +721,7 @@ void matPower(int ans[NUMSQ][NUMSQ], userHistory* ptr)
     initialize(container,NUMSQ,NUMSQ);
     float ans2[NUMSQ][NUMSQ];
     convertToFloatArray(ans, ans2);
-    fillStruct(original, container, ans2, id, ptr,row,col);
+    fillStruct(original, container, ans2, id, ptr,NUMSQ,NUMSQ);
 
     ptr = NULL;
     return;
