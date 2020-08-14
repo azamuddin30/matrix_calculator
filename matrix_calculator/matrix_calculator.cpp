@@ -339,7 +339,7 @@ void invMatDriver(int arr[NUMSQ][NUMSQ], float inv[NUMSQ][NUMSQ], userHistory* p
         print(inv, row, row);
         int dummyArray[NUMSQ][NUMSQ];
         initialize(dummyArray, NUMSQ, NUMSQ);
-        fillStruct(arr, dummyArray, inv, id, ptr, row, col);
+        fillStruct(arr, dummyArray, inv, id, ptr, NUMSQ, NUMSQ);
 
 
     }
