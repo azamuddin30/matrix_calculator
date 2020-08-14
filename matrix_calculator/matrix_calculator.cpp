@@ -57,7 +57,7 @@ int main()
             << "9.History: Reset\n\n"
             << "10.History: Print on file\n\n"
             << "11.Exit\n\n"
-            << "Enter your option (1-10) :";
+            << "Enter your option (1-11) :";
 
         cin >> userChoice;
 
@@ -108,6 +108,8 @@ int main()
             printFile(ptrH, indexPtr);
             break;
         case 11:
+            delete[] ptrH;
+            ptrH = NULL;
             return 1;
         default:
             cout << "\nNot a valid option\n";
