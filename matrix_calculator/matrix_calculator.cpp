@@ -18,7 +18,7 @@ void print(T G[NUMSQ][NUMSQ],int row,int col)
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < col; j++)
-            cout << G[i][j] << " "; 
+            cout << setw(10) << G[i][j] ;
         cout << endl;
 
     }
@@ -512,7 +512,7 @@ void transposeMat(int arr[NUMSQ][NUMSQ], int arr2[NUMSQ][NUMSQ], userHistory* pt
     cout << "The transpose matrix is:" << endl;
     for (int i = 0; i < col; ++i) {
         for (int j = 0; j < row; ++j)
-            cout << arr2[i][j] << " | ";
+            cout << setw(10) << arr2[i][j] ;
         cout << endl;
     }
     int dummyArray[NUMSQ][NUMSQ];
@@ -858,7 +858,7 @@ void printStruct( userHistory* ptr,int index)
         {
             for (int k = 0; k < NUMSQ; ++k)
             {
-                cout << (ptr + i)->inArray[j][k] << " ";
+                cout << setw(10) << (ptr + i)->inArray[j][k] ;
 
             }
             cout << endl;
@@ -869,7 +869,7 @@ void printStruct( userHistory* ptr,int index)
         {
             for (int k = 0; k < NUMSQ; ++k)
             {
-                cout << (ptr + i)->inArray2[j][k] << " ";
+                cout << setw(10) << (ptr + i)->inArray2[j][k] ;
 
             }
             cout << endl;
@@ -880,7 +880,7 @@ void printStruct( userHistory* ptr,int index)
         {
             for (int k = 0; k < NUMSQ; ++k)
             {
-                cout << (ptr + i)->OutArray[j][k] << " ";
+                cout << setw(10) << (ptr + i)->OutArray[j][k] ;
 
             }
             cout << endl;
@@ -1037,7 +1037,7 @@ void printFile( userHistory* ptrK,  int index)
         {
             for (int k = 0; k < NUMSQ; ++k)
             {
-                writeF << (ptrK + i)->inArray[j][k] << " ";
+                writeF << setw(10) << (ptrK + i)->inArray[j][k] ;
 
             }
             writeF << endl;
@@ -1048,7 +1048,7 @@ void printFile( userHistory* ptrK,  int index)
         {
             for (int k = 0; k < NUMSQ; ++k)
             {
-                writeF << (ptrK + i)->inArray2[j][k] << " ";
+                writeF << setw(10) << (ptrK + i)->inArray2[j][k] ;
 
             }
             writeF << endl;
@@ -1059,7 +1059,7 @@ void printFile( userHistory* ptrK,  int index)
         {
             for (int k = 0; k < NUMSQ; ++k)
             {
-                writeF << (ptrK + i)->OutArray[j][k] << " ";
+                writeF << setw(10) << (ptrK + i)->OutArray[j][k] ;
 
             }
             writeF << endl;
