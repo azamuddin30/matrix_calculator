@@ -552,7 +552,7 @@ void matAdd(int a[][NUMSQ], int b[][NUMSQ], int sum[][NUMSQ], userHistory* ptr)
     cin >> row2 >> col2;
 
 
-    if (col1 != col2 && row1!=row2)
+    if (col1 != col2 || row1!=row2)
     {
         cout << "Column and row of first matrix should be equal to column and row of second matrix";
         return;
@@ -612,7 +612,7 @@ void matSubtraction(int a[][NUMSQ], int b[][NUMSQ], int sub[][NUMSQ], userHistor
     cin >> row2 >> col2;
 
 
-    if (col1 != col2 && row1 != row2)
+    if (col1 != col2 || row1 != row2)
     {
         cout << "Column and row of first matrix should be equal to column and row of second matrix";
         return;
