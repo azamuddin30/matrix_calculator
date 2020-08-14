@@ -53,11 +53,12 @@ int main()
             << "5.Matrix Subtraction\n\n"
             << "6.Matrix Power\n\n"
             << "7.Matrix Determinant\n\n"
-            << "8.Read User History\n\n"
+            << "8.History: Read\n\n"
             << "9.History: Reset\n\n"
             << "10.History: Print on file\n\n"
             << "11.Exit\n\n"
-            << "Enter your option (1-11) :";
+            << "12.History: Update\n\n"
+            << "Enter your option (1-12) :";
 
         cin >> userChoice;
 
@@ -111,6 +112,12 @@ int main()
             delete[] ptrH;
             ptrH = NULL;
             return 1;
+        case 12:
+            cout << "\nEnter the Position You wish to change: ";
+            int search2;
+            cin >> search2;
+            updateStruct(ptrH, indexPtr, search2);
+            break;
         default:
             cout << "\nNot a valid option\n";
 
