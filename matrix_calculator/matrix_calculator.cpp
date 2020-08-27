@@ -928,7 +928,7 @@ void updateStruct(userHistory* ptr, int current, int search)//current is already
     float inverseMat[NUMSQ][NUMSQ];
     int userChoice;
 
-    if (search >= current && search < 0)
+    if (search >= current || search < 0)
     {
         cout << "\nThe Position is out of the range.Exiting..\n";
         return;
